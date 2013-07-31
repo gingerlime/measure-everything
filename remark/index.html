@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css" media="screen">
+
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+
+      body {
+        font-family: 'Droid Serif';
+        font-size: 30px;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      h1 { font-size: 4em; }
+      h2 { font-size: 2em; }
+      h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        -moz-border-radius: 5px;
+        -web-border-radius: 5px;
+        background: #e7e8e2;
+        border-radius: 5px;
+        font-size: 24px;
+      }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+# Measure \**everything* \*
+
+---
+
+## How many new registrations today?
+
+---
+
+```ruby
+User.where('created_at > ?', 1.day.ago)
+```
+
+---
+
+## How many users logged in today?
+
+---
+```ruby
+# if you use devise
+User.where('current_sign_in_at > ?', 1.day.ago)
+```
+---
+## How many users *failed* to login today?
+
+---
+```ruby
+User.where('mmmm...???', 1.day.ago)
+```
+---
+## How many Widgets deleted last week?
+---
+
+```shell
+$ cat production.log | \
+  grep 2013-07-([2][3-9]|3[0-1]) | \
+  grep delete_widget |grep 200 |wc -l 
+```
+
+---
+
+```shell
+$ cat production.log | \
+  grep 2013-07-([2][3-9]|3[0-1]) | \
+  grep login |grep 403 |wc -l
+```
+
+---
+## How many widgets got their price changed?
+---
+
+## How many widgets got their price changed? ???
+
+---
+
+## Not everything lives in the DB
+* actions or results
+* deletions
+* updates from x -> y
+* background jobs / queues / emails
+* APIs
+* ... not everything lives in the Logs either
+---
+## Even things that *do* live in DB
+* not so easy to trend over time
+* events across multiple servers / DBs
+---
+# Sysadmins
+
+* cpu / memory / io
+* charts, alerts, trends
+* analyze, predict(?)
+---
+## Data that \*matters\*???
+
+* ad-hoc queries
+* greping logs
+* static dashboards & reports
+
+---
+# Something better
+
+* business metrics 
+* collect (easily!)
+* query over time => trend
+* build dashboards on-the-fly
+* alert
+---
+# Requirements
+
+* low overhead (push, async)
+* independent, de-coupled
+* aggregation and storage
+* charting / query capabilities
+* flexible & customizable
+* (near) real-time
+
+---
+# Statsd
+
+* Protocol & implementation
+* Created and maintained by Etsy
+* UDP listener / connectionless
+* Aggregation period 10sec by default
+
+---
+```ruby
+# Gemfile
+gem 'statsd-ruby', :require => 'statsd'
+```
+----
+```ruby
+# set up global stasd client
+$statsd = Statsd.new('localhost')
+```
+
+```ruby
+# counting login failures
+$statsd.increment \
+  "events.password.fail"
+```
+
+---
+
+```ruby
+# counting successful logins
+$statsd.increment \
+  "events.password.success"
+```
+
+---
+
+```ruby
+# counting how many widgets deleted
+$statsd.count \
+  "events.widgets.deleted", 3
+```
+
+---
+# counters
+
+* typically *events*
+e.g.
+* CRUD operations
+* errors / failures
+* tagging activity, based on:
+  locale, country, result...
+* jobs, emails, APIs
+* Statsd aggregation: sum
+
+---
+
+```ruby
+# tracking how many jobs in the queue
+$statsd.gauge Delayed::Job.count
+```
+
+---
+# Gauges
+
+* current state / level
+* useful for polling info, when we
+  cannot / do not want to track each event
+* Statsd aggregation: last value 
+  until new level is provided
+
+---
+
+```ruby
+$statsd.timing 'some.long.op', 580
+
+# or
+$statsd.time('some.long.op') do
+  some_long_op(...)
+end
+```
+
+---
+
+```ruby
+# Rails instrumentation
+ActiveSupport::Notifications.instrument 
+  :timing, 
+  { measurement: 'some.long.op' } do
+
+  some_long_op(...)
+
+end
+```
+
+---
+
+```ruby
+ActiveSupport::Notifications.subscribe \
+  /timing/ do |name, start, finish, id, payload|
+
+  time_ms = (finish - start) * 1000
+  $statsd.timing payload[:measurement], time_ms
+
+end
+```
+
+---
+# timers
+
+* how long it took
+* statsd aggregation:
+  - mean
+  - max
+  - min
+  - 90th percentile (configurable)
+---
+# Statsd
+
+* Aggregation period 10sec by default
+* Many client implementations
+* Many server implementations*
+* Supports different backends, but
+  primarily Graphite
+
+---
+# Graphite
+
+* a (fairly) modular collection of tools
+* `carbon-agent` / `carbon-cache` - collection
+* `whisper` / `ceres` - storage
+* `graphite-web` - query & reporting
+
+---
+# Storage
+
+* RRD - Round Robin Database
+* 'Buckets' for different time resolution
+* configurable aggregation, e.g.
+
+  `10s: 1d, 30s: 1w, 60s: 1y, 5min: 5y`
+
+---
+# Graphite-web functions
+
+* powerful toolbox for data reporting
+* composable
+* can output graph or raw data (json, csv)
+
+---
+
+```python
+# Graphite-web functions
+
+# sumSeries / sum - collate data series
+sumSeries('events.*.password.fail')
+
+# summarize - 'slice' data over time
+summarize(sum('events.*.password.fail'), '1h', 'avg')
+```
+
+---
+```python
+# ratio of success / failed logins
+summarize(
+ asPercent(
+  sum(events.*.password.fail),
+  sum(events.*.password.success)),
+ "5min","avg")
+```
+---
+```python
+# calculate growth rate
+offset(
+ scale(
+  divideSeries(
+   'stats.gauges.subscriptions.active', 
+   timeShift('stats.gauges.subscriptions.active'
+             , '1w'))
+  , 100), -100)
+```
+
+---
+# Meet my Giraffe
+
+* giraffe.kenhub.com
+* (yet another) Graphite dashboard
+* run anywhere / no server
+* realtime / fast refresh
+* simple one-file configuration
+* written in Coffeescript
+* Uses Rickshaw.js/d3
+
+---
+# Taking the giraffe for a walk
+
+---
+# Other tools
+
+* gingerlime/graphite-fabric
+* gingerlime/graphite-newrelic
+* omry/munin-graphite
+
+---
+# Commercial
+
+* Librato Metrics
+* Instrumental
+* hostedgraphite.com
+
+---
+# More?
+---
+# Instrumentation in Rails
+
+---
+
+```
+Started GET "/" for 127.0.0.1 at
+ 2012-03-10 14:28:14 +0100
+Processing by HomeController#index as HTML
+...
+Completed 200 OK in 79ms 
+(Views: 68.8ms | ActiveRecord: 11.1ms)
+```
+
+---
+```ruby
+ActiveSupport::Notifications.subscribe \
+  /process_action.action_controller/ do
+
+  event = \ 
+    ActiveSupport::Notifications::Event.new(*args)
+  
+  controller = event.payload[:controller]
+  action = event.payload[:action]
+  format = event.payload[:format] || "all"
+
+  key = "#{controller}.#{action}.#{format}"
+```
+
+---
+```ruby
+  $statsd.timing \
+    "#{key}.total_ms", event.duration
+  $statsd.timing \
+    "#{key}.db_ms", event.payload[:db_runtime]
+  $statsd.timing \
+     "#{key}.view_ms", event.payload[:view_runtime]
+
+end
+```
+---
+## 'nunes' gem
+
+* `process_action.action_controller`
+* `render_template.action_view`
+* `render_partial.action_view`
+* `deliver.action_mailer`
+* `receive.action_mailer`
+* `sql.active_record`
+* `cache_read.active_support`
+* `cache_generate.active_support`
+* `cache_fetch_hit.active_support`
+* `cache_write.active_support`
+* `cache_delete.active_support`
+* `cache_exist?.active_support`
+
+---
+# Thank you.
+
+* now go and start measuring *your* app.
+
+---
+# Further reading
+
+* http://codeascraft.com/2011/02/15/measure-anything-measure-everything/
+* http://37signals.com/svn/posts/3091-pssst-your-rails-application-has-a-secret-to-tell-you
+* http://blog.gingerlime.com/2013/graphite-alerts-with-monit/
+* http://www.mikeperham.com/2012/08/25/using-statsd-with-rails/
+* http://rcrowley.org/articles/federated-graphite.html
+* http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.3.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: 'monokai'
+      });
+    </script>
+  </body>
+</html>

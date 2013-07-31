@@ -1,0 +1,6 @@
+/* Automatically generated */
+
+module.exports = {
+  documentStyles: %DOCUMENT_STYLES%,
+  containerLayout: %CONTAINER_LAYOUT%
+};

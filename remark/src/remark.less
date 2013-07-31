@@ -1,0 +1,243 @@
+/*************/
+/* Container */
+/*************/
+
+html.remark-container, body.remark-container {
+  height: 100%;
+}
+.remark-container {
+  background: #d7d8d2;
+  margin: 0;
+  overflow: hidden;
+}
+.remark-container:focus {
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+/*************/
+/* Slideshow */
+/*************/
+
+.remark-slideshow-area {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.remark-slideshow {
+  background: #fff;
+  overflow: hidden;
+  position: absolute;
+  -webkit-transform-origin: top left;
+  -moz-transform-origin: top left;
+  transform-origin: top-left;
+  -moz-box-shadow: 0 0 30px #888;
+  -webkit-box-shadow: 0 0 30px #888;
+  box-shadow: 0 0 30px #888;
+}
+
+/*********/
+/* Slide */
+/*********/
+
+.remark-slide {
+  height: 100%;
+  width: 100%;
+
+  > .left {
+    text-align: left;
+  }
+
+  > .center {
+    text-align: center;
+  }
+
+  > .right {
+    text-align: right;
+  }
+
+  > .top {
+    vertical-align: top;
+  }
+
+  > .middle {
+    vertical-align: middle;
+  }
+
+  > .bottom {
+    vertical-align: bottom;
+  }
+
+  .remark-slide-content {
+    background-position: center;
+    background-repeat: no-repeat;
+    display: table-cell;
+    padding: 1em 4em 1em 4em;
+
+    .left {
+      display: block;
+      text-align: left;
+    }
+
+    .center {
+      display: block;
+      text-align: center;
+    }
+
+    .right {
+      display: block;
+      text-align: right;
+    }
+  }
+}
+
+/************/
+/* Position */
+/************/
+
+.remark-position {
+  bottom: 12px;
+  opacity: 0.5;
+  position: absolute;
+  right: 20px;
+}
+
+/************/
+/* Backdrop */
+/************/
+
+.remark-backdrop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  opacity: 0.95;
+  background: #000;
+}
+
+/********/
+/* Help */
+/********/
+
+.remark-help {
+  bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  -webkit-transform-origin: top left;
+  -moz-transform-origin: top left;
+  transform-origin: top-left;
+
+  .remark-help-content {
+    color: white;
+    font-family: Helvetica, arial, freesans, clean, sans-serif;
+    font-size: 12pt;
+    position: absolute;
+    top: 10%;
+    bottom: 10%;
+    left: 10%;
+    height: 10%;
+
+    td {
+      color: white;
+      font-size: 12pt;
+      padding: 10px;
+    }
+    td:first-child {
+      padding-left: 0;
+    }
+    .key {
+      background: white;
+      color: black;
+      min-width: 1em;
+      display: inline-block;
+      padding: 3px 6px;
+      text-align: center;
+      border-radius: 4px;
+    }
+  }
+
+  .dismiss {
+    top: 85%;
+  }
+}
+
+.remark-container.remark-help-mode {
+  .remark-help {
+    display: block;
+  }
+  .remark-backdrop {
+    display: block
+  }
+}
+
+/******************/
+/* Presenter mode */
+/******************/
+
+.remark-preview-area {
+  bottom: 2%;
+  left: 2%;
+  display: none;
+  opacity: 0.5;
+  position: absolute;
+  height: 47.25%;
+  width: 48%;
+
+  .remark-slideshow:empty {
+    display: none;
+  }
+}
+
+.remark-notes-area {
+  background: #e7e8e2;
+  bottom: 0;
+  display: none;
+  left: 52%;
+  overflow: hidden;
+  padding: 1.5em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.remark-toolbar {
+  color: #979892;
+  padding-bottom: 1em;
+
+  .remark-toolbar-link {
+    border: 2px solid #d7d8d2;
+    color: #979892;
+    display: inline-block;
+    padding: 2px 2px;
+    text-decoration: none;
+    text-align: center;
+    min-width: 20px;
+
+    &:hover {
+      border-color: #979892;
+      color: #676862;
+    }
+  }
+}
+
+.remark-container.remark-presenter-mode {
+  .remark-slideshow-area {
+    top: 2%;
+    left: 2%;
+    height: 47.25%;
+    width: 48%;
+  }
+  .remark-preview-area {
+    display: block;
+  }
+  .remark-notes-area {
+    display: block;
+  }
+}
