@@ -498,6 +498,31 @@ end
 * [federated graphite](http://rcrowley.org/articles/federated-graphite.html)
 * [understanding statsd and graphite](http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/)
 
+---
+## Footnotes
+
+* these were added after the presentation in response to some questions or comments
+* using a global `$statsd` is probably not the best way in your production. It was only for demonstration purposes
+  and to keep things clear. You should use the Rails instrumentation or wrap it inside a function in your application. 
+  This is what we do at kenhub.com
+
+---
+## Footnotes
+
+* The whisper RRD is not a typical "database". Each metric you generate creates a file. e.g. "events.password.fail"
+  will turn in to `stats/counters/events/password/fail/count.wsp` and `stats/counters/events/password/fail/rate.wsp`
+* You should (conceptually) de-couple the *collection* of stats (using statsd) from the presentation of them (using graphite). 
+  These tools allow you to do this. But basically, you should collect much more than you necessarily need, in order to later
+  have more flexilbility to query.
+ 
+---
+## Footnotes
+
+* You can define the aggregation retention (`10s: 1d, 60s: 1w ...`) for different metrics differently.
+  So some metrics can have shorter or longer retention, based on their name.
+  see [storage-schemas.conf](http://graphite.readthedocs.org/en/latest/config-carbon.html) documenation.
+
+
     </textarea>
     <script src="http://gnab.github.io/remark/downloads/remark-0.5.3.min.js" type="text/javascript">
     </script>
